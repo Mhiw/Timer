@@ -18,6 +18,8 @@ public class Main {
 
     private int elapsedSeconds;
 
+    private int updateTime = 1000;
+
     private String ConvertToCorrectFormat(int seconds)
     {
         int sec = seconds % 60;
@@ -43,11 +45,14 @@ public class Main {
             public void run() {
                 Update();
             }
-        }, 0, 1000);
+        }, 0, updateTime);
     }
 
     private void StopTimer() {
         isOn = false;
+        timeText.setText("0:0:0");
+        elapsedSeconds = 0;
+        timer.cancel();
     }
 
     private void PauseTimer() {
