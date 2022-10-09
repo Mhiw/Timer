@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 
 public class Main {
     JLabel timeText;
+    Timer timer;
 
     private boolean isOn;
     private boolean isPaused;
@@ -27,13 +28,16 @@ public class Main {
     }
 
     private void Update() {
-        elapsedSeconds++;
-        timeText.setText(ConvertToCorrectFormat(elapsedSeconds));
+        if(!isPaused)
+        {
+            elapsedSeconds++;
+            timeText.setText(ConvertToCorrectFormat(elapsedSeconds));
+        }
     }
 
     private void StartTimer() {
         isOn = true;
-        Timer timer = new Timer();
+        timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -44,6 +48,14 @@ public class Main {
 
     private void StopTimer() {
         isOn = false;
+    }
+
+    private void PauseTimer() {
+        isPaused = true;
+    }
+
+    private void ResumeTimer() {
+        isPaused = false;
     }
 
     public Main() {
@@ -62,14 +74,28 @@ public class Main {
         StartBtn.addActionListener(
             new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    if(!isOn) {
-                        StartBtn.setText("Start");
-                        
-                        StartTimer();
-                    } else {
-                        StartBtn.setText("Stop");
-                    
+                    if(isOn) {
                         StopTimer();
+                        StartBtn.setText("Start");
+                    } else {
+                        StartTimer();
+                        StartBtn.setText("Stop");
+                    }
+                }
+            }
+        );
+        
+        JButton PauseBtn = new JButton("Pause");
+        PauseBtn.setBounds(105, 117, 100, 40);
+        PauseBtn.addActionListener(
+            new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    if(isPaused) {
+                        ResumeTimer();
+                        PauseBtn.setText("Pause");
+                    } else {
+                        PauseTimer();
+                        PauseBtn.setText("Resume");
                     }
                 }
             }
@@ -78,6 +104,7 @@ public class Main {
         frame.setLayout(null);
         frame.add(StartBtn);
         frame.add(timeText);
+        frame.add(PauseBtn);
         frame.setVisible(true);
     }
 
